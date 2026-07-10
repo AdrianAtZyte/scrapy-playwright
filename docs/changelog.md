@@ -1,7 +1,7 @@
 # scrapy-playwright changelog
 
 
-### [v0.0.48](https://github.com/scrapy-plugins/scrapy-playwright/releases/tag/v0.0.48) (unreleased)
+### [v0.0.48](https://github.com/scrapy-plugins/scrapy-playwright/releases/tag/v0.0.48) (2026-07-10)
 
 * Support for third-party browser providers (`PLAYWRIGHT_BROWSER_PROVIDER` setting)
 
