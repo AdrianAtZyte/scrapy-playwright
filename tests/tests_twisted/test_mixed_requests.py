@@ -33,7 +33,9 @@ class MixedRequestsTestCase(TestCase, BaseTestCase):
     def test_download_request(self):
         def _check_response(response: Response, request: Request) -> None:
             self.assertIsInstance(response, Response)
-            self.assertEqual(response.css("a::text").getall(), ["Lorem Ipsum", "Infinite Scroll"])
+            self.assertEqual(
+                response.css("a::text").getall(), ["Lorem Ipsum", "Infinite Scroll", "Quotes JSON"]
+            )
             self.assertEqual(response.url, request.url)
             self.assertEqual(response.status, 200)
             if request.meta.get("playwright"):
