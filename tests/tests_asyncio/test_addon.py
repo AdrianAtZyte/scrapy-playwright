@@ -1,7 +1,9 @@
 from unittest import TestCase
 
-from scrapy.addons import AddonManager
+import pytest
 from scrapy.settings import Settings
+
+AddonManager = pytest.importorskip("scrapy.addons").AddonManager
 
 _HANDLER = "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler"
 
