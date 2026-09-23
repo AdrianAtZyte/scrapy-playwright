@@ -64,6 +64,25 @@ class MixinProcessHeadersTestCase(BaseTestCase):
             assert b"asdf" not in req.headers
 
     @allow_windows
+    async def test_playwright_headers_routed(self):
+        settings_dict = {
+            "PLAYWRIGHT_BROWSER_TYPE": self.browser_type,
+            "PLAYWRIGHT_CONTEXTS": {"default": {"user_agent": self.browser_type}},
+            "PLAYWRIGHT_PROCESS_REQUEST_HEADERS": None,
+            "PLAYWRIGHT_ABORT_REQUEST": lambda _: False,
+        }
+        async with make_handler(settings_dict) as handler:
+            req = Request(
+                url=self.server.urljoin("/headers"),
+                meta={"playwright": True},
+                headers={"User-Agent": "foobar"},
+            )
+            resp = await handler._download_request(req, Spider("foo"))
+            headers = json.loads(resp.css("pre::text").get())
+            headers = {key.lower(): value for key, value in headers.items()}
+            assert headers["user-agent"] == self.browser_type
+
+    @allow_windows
     async def test_playwright_headers_redirect(self):
         settings_dict = {
             "PLAYWRIGHT_BROWSER_TYPE": self.browser_type,
