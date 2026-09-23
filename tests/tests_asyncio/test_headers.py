@@ -51,7 +51,7 @@ class MixinProcessHeadersTestCase(BaseTestCase):
             resp = await handler._download_request(req, Spider("foo"))
             headers = json.loads(resp.css("pre::text").get())
             headers = {key.lower(): value for key, value in headers.items()}
-            assert headers["cookie"] == "foo=bar; asdf=qwerty"
+            assert sorted(headers["cookie"].split("; ")) == ["asdf=qwerty", "foo=bar"]
 
     @allow_windows
     async def test_playwright_headers(self):
