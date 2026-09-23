@@ -64,6 +64,21 @@ class MixinProcessHeadersTestCase(BaseTestCase):
             assert b"asdf" not in req.headers
 
     @allow_windows
+    async def test_browser_cache(self):
+        if self.browser_type != "chromium":
+            pytest.skip("Only Chromium seems to use its HTTP cache")
+        settings_dict = {
+            "PLAYWRIGHT_BROWSER_TYPE": self.browser_type,
+            "PLAYWRIGHT_PROCESS_REQUEST_HEADERS": None,
+        }
+        hits = self.server.httpd.hits["/cached.css"]
+        async with make_handler(settings_dict) as handler:
+            for _ in range(2):
+                req = Request(url=self.server.urljoin("/cached"), meta={"playwright": True})
+                await handler._download_request(req, Spider("foo"))
+        assert self.server.httpd.hits["/cached.css"] == hits + 1
+
+    @allow_windows
     async def test_use_custom_headers_ok(self):
         """Custom header processing function"""
 
